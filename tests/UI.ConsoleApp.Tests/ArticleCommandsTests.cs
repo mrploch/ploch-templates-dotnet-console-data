@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Ploch.Data.EFCore.SqLite;
+using Ploch.TemplateApp.Data;
 using Ploch.TemplateApp.Data.SQLite;
+using Ploch.TemplateApp.Model;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using Spectre.Console.Testing;
@@ -35,6 +38,19 @@ public sealed class ArticleCommandsTests : IDisposable
 
         exitCode.Should().Be(0);
         output.Should().Contain("Getting started").And.Contain("Second steps").And.Contain("Ada");
+
+        // The second article must reuse the existing author, not store a second "Ada".
+        await using var verifyContext = CreateDbContext();
+        (await verifyContext.Authors.CountAsync(TestContext.Current.CancellationToken)).Should().Be(1);
+        (await verifyContext.Articles.CountAsync(article => article.AuthorId != null, TestContext.Current.CancellationToken)).Should().Be(2);
+    }
+
+    [Fact]
+    public async Task Add_should_fail_when_the_title_is_too_long()
+    {
+        var act = () => RunAsync("articles", "add", new string('x', Article.TitleMaxLength + 1));
+
+        await act.Should().ThrowAsync<CommandRuntimeException>().WithMessage($"*longer than {Article.TitleMaxLength} characters*");
     }
 
     [Fact]
@@ -84,5 +100,12 @@ public sealed class ArticleCommandsTests : IDisposable
         var exitCode = await app.RunAsync(args, TestContext.Current.CancellationToken);
 
         return (exitCode, console.Output);
+    }
+
+    private TemplateAppDbContext CreateDbContext()
+    {
+        var options = new DbContextOptionsBuilder<TemplateAppDbContext>().UseSqlite(ConnectionString).Options;
+
+        return new TemplateAppDbContext(options, new SqLiteDbContextCreationLifecycle());
     }
 }

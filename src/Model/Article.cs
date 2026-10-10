@@ -6,10 +6,15 @@ namespace Ploch.TemplateApp.Model;
 public class Article : IHasId<int>, IHasTitle, IHasDescription, IHasContents, IHasAuditProperties,
                        IHasCategories<ArticleCategory>, IHasTags<ArticleTag>
 {
+    /// <summary>
+    ///     The maximum length of <see cref="Title" />.
+    /// </summary>
+    public const int TitleMaxLength = 256;
+
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(256)]
+    [MaxLength(TitleMaxLength)]
     public string Title { get; set; } = null!;
 
     [MaxLength(1024)]

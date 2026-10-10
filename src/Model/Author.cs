@@ -5,10 +5,15 @@ namespace Ploch.TemplateApp.Model;
 
 public class Author : IHasId<int>, INamed, IHasDescription, IHasAuditProperties
 {
+    /// <summary>
+    ///     The maximum length of <see cref="Name" />.
+    /// </summary>
+    public const int NameMaxLength = 128;
+
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(128)]
+    [MaxLength(NameMaxLength)]
     public string Name { get; set; } = null!;
 
     [MaxLength(512)]

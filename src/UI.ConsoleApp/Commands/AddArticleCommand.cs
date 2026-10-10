@@ -64,7 +64,25 @@ internal sealed class AddArticleCommand(IAnsiConsole console, TemplateAppDbConte
         public string? Author { get; init; }
 
         /// <inheritdoc />
-        public override ValidationResult Validate() =>
-            string.IsNullOrWhiteSpace(Title) ? ValidationResult.Error("The title must not be empty.") : ValidationResult.Success();
+        public override ValidationResult Validate()
+        {
+            // The limits come from the model, so SQLite (which does not enforce them) and SQL Server agree.
+            if (string.IsNullOrWhiteSpace(Title))
+            {
+                return ValidationResult.Error("The title must not be empty.");
+            }
+
+            if (Title.Trim().Length > Article.TitleMaxLength)
+            {
+                return ValidationResult.Error($"The title must not be longer than {Article.TitleMaxLength} characters.");
+            }
+
+            if (Author is not null && Author.Trim().Length > Model.Author.NameMaxLength)
+            {
+                return ValidationResult.Error($"The author name must not be longer than {Model.Author.NameMaxLength} characters.");
+            }
+
+            return ValidationResult.Success();
+        }
     }
 }

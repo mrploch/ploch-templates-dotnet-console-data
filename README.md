@@ -145,6 +145,11 @@ Until `SONAR_TOKEN` exists and the SonarCloud project has been created, the Buil
 a warning rather than failing, so a new repository is green from its first push. A token that exists but is
 rejected by SonarCloud fails the build.
 
+### Security reporting
+
+Under **Settings → Code security**, enable **Private vulnerability reporting**. `SECURITY.md` and the issue-form
+contact link send reporters there; with it disabled, they have no private channel.
+
 ### Branch protection
 
 Protect `main` and require the **Build, test and analyse** and **Test Results** checks. Do not require the

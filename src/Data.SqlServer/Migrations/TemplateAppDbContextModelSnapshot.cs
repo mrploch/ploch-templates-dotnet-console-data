@@ -208,6 +208,9 @@ namespace Ploch.TemplateApp.Data.SqlServer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Authors");
                 });
 
