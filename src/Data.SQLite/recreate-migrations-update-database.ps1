@@ -12,17 +12,24 @@ try {
         throw "ConnectionStrings:DefaultConnection names the database more than once ($($aliases -join ', ')); keep one."
     }
     $dataSource = if ($aliases.Count -eq 1) { [string] $builder[$aliases[0]] }
-    # Only the on-disk modes are allowed; anything else (Memory, 3, an unknown value) leaves the file alone.
+    # Only ReadWriteCreate (the default) can create the replacement database; any other mode (ReadWrite, ReadOnly,
+    # Memory, 3, an unknown value) leaves the file alone.
     $mode = if ($builder.ContainsKey('Mode')) { ([string] $builder['Mode']).Trim() } else { 'ReadWriteCreate' }
-    if (-not $dataSource -or $dataSource -eq ':memory:' -or $mode -notin 'ReadWriteCreate', 'ReadWrite', 'ReadOnly') {
+    if (-not $dataSource -or $dataSource -eq ':memory:') {
         throw "No SQLite file is named by ConnectionStrings:DefaultConnection in appsettings.json."
+    }
+    if ($mode -ne 'ReadWriteCreate') {
+        throw "ConnectionStrings:DefaultConnection uses Mode=$mode; only ReadWriteCreate can recreate the database."
     }
     if ($dataSource -match '^\s*file:' -or $dataSource -like '*|DataDirectory|*') {
         throw "ConnectionStrings:DefaultConnection uses a URI or |DataDirectory| path ('$dataSource'); delete the database manually."
     }
 
     foreach ($suffix in '', '-journal', '-wal', '-shm') {
-        Remove-Item -LiteralPath "$dataSource$suffix" -Force -Confirm:$false -ErrorAction SilentlyContinue
+        # Missing files are fine; a file that exists but cannot be deleted (locked, no permission) stops the script.
+        if (Test-Path -LiteralPath "$dataSource$suffix") {
+            Remove-Item -LiteralPath "$dataSource$suffix" -Force -Confirm:$false -ErrorAction Stop
+        }
     }
 
     ./recreate-migrations.ps1
