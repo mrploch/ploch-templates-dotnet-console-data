@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoFixture.Xunit3" />
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Ploch.Data.GenericRepository.EFCore.IntegrationTesting" />
+        <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+        <PackageReference Include="xunit.v3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="FluentAssertions" />
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Data.SQLite\Ploch.TemplateApp.Data.SQLite.csproj" />
+        <ProjectReference Include="..\..\src\Data.SqlServer\Ploch.TemplateApp.Data.SqlServer.csproj" />
+        <ProjectReference Include="..\..\src\Data\Ploch.TemplateApp.Data.csproj" />
+        <ProjectReference Include="..\..\src\Model\Ploch.TemplateApp.Model.csproj" />
+    </ItemGroup>
+
+</Project>

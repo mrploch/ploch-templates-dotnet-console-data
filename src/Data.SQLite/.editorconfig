@@ -1,0 +1,4 @@
+# EF Core generates the files under Migrations/. Treat them as generated code so analysers and style rules skip them;
+# recreate-migrations.ps1 regenerates them, so this lives beside the folder rather than inside it.
+[Migrations/**.cs]
+generated_code = true

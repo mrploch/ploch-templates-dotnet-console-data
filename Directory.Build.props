@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Repository-wide MSBuild settings, imported before every project file.
+
+    Template note: scripts/Initialize-Repository.ps1 replaces "TemplateApp" and
+    "ploch-templates-dotnet-console-data" throughout the repository. Review the Product group
+    below after running it.
+-->
+<Project>
+    <PropertyGroup Label="Product">
+        <Authors>Kris Ploch</Authors>
+        <Company>Ploch</Company>
+        <Product>Ploch.TemplateApp</Product>
+        <Description>Ploch.TemplateApp command-line application with an EF Core data layer.</Description>
+        <Copyright>Kris Ploch $([System.DateTime]::Now.Year)</Copyright>
+        <RepositoryUrl>https://github.com/mrploch/ploch-templates-dotnet-console-data.git</RepositoryUrl>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Build">
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest-Recommended</AnalysisLevel>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <!-- CI builds in Release, so every analyser warning fails the pull request instead of accumulating. -->
+        <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+        <!-- GitHub Actions sets CI=true; this makes paths in PDBs deterministic. -->
+        <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+        <IsTestProject>$(MSBuildProjectName.EndsWith('Tests'))</IsTestProject>
+        <!-- An application, not a library: nothing in this repository is published as a NuGet package. -->
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <!-- Versions come from version.json (Nerdbank.GitVersioning). -->
+    <ItemGroup>
+        <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!--
+        Coverage is collected by coverlet.msbuild in every test project, so `dotnet test /p:CollectCoverage=true`
+        always produces a report. A test project without it would silently report nothing.
+    -->
+    <ItemGroup Condition="$(IsTestProject)">
+        <PackageReference Include="coverlet.msbuild" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" Visible="false" />
+    </ItemGroup>
+</Project>
