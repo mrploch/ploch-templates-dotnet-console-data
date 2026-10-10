@@ -72,7 +72,8 @@ few milliseconds and keeps a fresh checkout working with no setup; an applicatio
 implicitly can move the call into a dedicated `database update` command.
 
 `ConsoleApplication.Create` takes the database configuration from its caller, so `Program.cs` is the one place that
-chooses the provider. To switch to SQL Server, reference `src/Data.SqlServer` from the application, call
+chooses the provider. To switch to SQL Server, replace the application's `src/Data.SQLite` reference with
+`src/Data.SqlServer` (whose `appsettings.json` then becomes the application's configuration), call
 `UseSqlServer` with that project's migrations assembly in `Program.cs`, and register
 `DefaultDbContextCreationLifecycle` instead of `SqLiteDbContextCreationLifecycle` in `ConsoleApplication`.
 

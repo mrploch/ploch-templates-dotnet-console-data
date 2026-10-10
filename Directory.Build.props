@@ -34,6 +34,14 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
+    <!--
+        Test projects are never deployed. The integration tests reference both provider projects, whose
+        appsettings.json files would otherwise collide when the solution is published (NETSDK1152).
+    -->
+    <PropertyGroup Condition="$(IsTestProject)">
+        <IsPublishable>false</IsPublishable>
+    </PropertyGroup>
+
     <!-- Versions come from version.json (Nerdbank.GitVersioning). -->
     <ItemGroup>
         <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />

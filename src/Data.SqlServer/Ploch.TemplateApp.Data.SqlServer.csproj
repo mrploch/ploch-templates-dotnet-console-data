@@ -13,8 +13,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- Design-time only: never published with an application that references this project. -->
-        <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+        <!--
+            Used by the dotnet-ef tool and, once an application references this project instead of src/Data.SQLite,
+            as that application's configuration: it is copied to the output and publish folders like the SQLite one.
+        -->
+        <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>
