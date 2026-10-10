@@ -10,7 +10,7 @@ namespace Ploch.TemplateApp.Data.Configurations;
 /// <see cref="ArticleConfiguration"/>; the remaining constraints come from the base
 /// <c>Tag</c> type and data annotations.
 /// </summary>
-internal sealed class ArticleTagConfiguration : IEntityTypeConfiguration<ArticleTag>
+public sealed class ArticleTagConfiguration : IEntityTypeConfiguration<ArticleTag>
 {
     public void Configure(EntityTypeBuilder<ArticleTag> builder)
     {

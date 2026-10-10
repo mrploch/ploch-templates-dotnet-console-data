@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Ploch.TemplateApp.Data.SQLite;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using Spectre.Console.Testing;
@@ -54,14 +56,23 @@ public sealed class ArticleCommandsTests : IDisposable
         await act.Should().ThrowAsync<CommandRuntimeException>().WithMessage("*The title must not be empty.*");
     }
 
-    public void Dispose() => File.Delete(_databasePath);
+    public void Dispose()
+    {
+        foreach (var path in new[] { _databasePath, $"{_databasePath}-journal", $"{_databasePath}-wal", $"{_databasePath}-shm" })
+        {
+            File.Delete(path);
+        }
+    }
 
     private async Task<(int ExitCode, string Output)> RunAsync(params string[] args)
     {
         using var console = new TestConsole();
         console.Profile.Width = 200;
         var services = new ServiceCollection().AddSingleton<IAnsiConsole>(console);
-        var app = ConsoleApplication.Create(services, ConnectionString);
+        var migrationsAssembly = typeof(TemplateAppDbContextFactory).Assembly.GetName().Name;
+        var app = ConsoleApplication.Create(
+            services,
+            options => options.UseSqlite(ConnectionString, sqlite => sqlite.MigrationsAssembly(migrationsAssembly)));
         app.Configure(config =>
         {
             config.Settings.Console = console;
@@ -70,7 +81,7 @@ public sealed class ArticleCommandsTests : IDisposable
             config.PropagateExceptions();
         });
 
-        var exitCode = await app.RunAsync(args);
+        var exitCode = await app.RunAsync(args, TestContext.Current.CancellationToken);
 
         return (exitCode, console.Output);
     }

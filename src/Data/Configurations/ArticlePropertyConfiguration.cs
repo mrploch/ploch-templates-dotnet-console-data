@@ -10,7 +10,7 @@ namespace Ploch.TemplateApp.Data.Configurations;
 /// from the Article side in <see cref="ArticleConfiguration"/>; the remaining constraints come from
 /// the data annotations on <see cref="ArticleProperty"/>.
 /// </summary>
-internal sealed class ArticlePropertyConfiguration : IEntityTypeConfiguration<ArticleProperty>
+public sealed class ArticlePropertyConfiguration : IEntityTypeConfiguration<ArticleProperty>
 {
     public void Configure(EntityTypeBuilder<ArticleProperty> builder)
     {

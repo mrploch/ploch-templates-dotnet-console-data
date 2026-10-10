@@ -25,10 +25,10 @@ internal sealed class AddArticleCommand(IAnsiConsole console, TemplateAppDbConte
             // Reuse an existing author with the same name rather than creating a duplicate. An existing author is
             // linked by its key, so adding the article never re-inserts an author that is already stored.
             var existing = await unitOfWork.Repository<Author, int>()
-                                           .GetAllAsync(author => author.Name == authorName, cancellationToken: cancellationToken);
-            if (existing.Count > 0)
+                                           .FindFirstAsync(author => author.Name == authorName, cancellationToken: cancellationToken);
+            if (existing is not null)
             {
-                article.AuthorId = existing[0].Id;
+                article.AuthorId = existing.Id;
             }
             else
             {

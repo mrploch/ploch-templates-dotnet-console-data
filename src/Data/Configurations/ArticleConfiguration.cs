@@ -4,7 +4,7 @@ using Ploch.TemplateApp.Model;
 
 namespace Ploch.TemplateApp.Data.Configurations;
 
-internal sealed class ArticleConfiguration : IEntityTypeConfiguration<Article>
+public sealed class ArticleConfiguration : IEntityTypeConfiguration<Article>
 {
     public void Configure(EntityTypeBuilder<Article> builder)
     {

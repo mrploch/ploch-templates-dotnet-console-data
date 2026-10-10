@@ -10,10 +10,13 @@ namespace Ploch.TemplateApp.UI.ConsoleApp.Infrastructure;
 internal sealed class TypeRegistrar(IServiceCollection services) : ITypeRegistrar
 {
     /// <inheritdoc />
-    public ITypeResolver Build() => new TypeResolver(services.BuildServiceProvider());
+    public ITypeResolver Build() => new TypeResolver(services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true }));
+
+    // Commands and their settings are created per run, so they are transient: a command never outlives the scope
+    // that supplies its dependencies (such as a scoped DbContext).
 
     /// <inheritdoc />
-    public void Register(Type service, Type implementation) => services.AddSingleton(service, implementation);
+    public void Register(Type service, Type implementation) => services.AddTransient(service, implementation);
 
     /// <inheritdoc />
     public void RegisterInstance(Type service, object implementation) => services.AddSingleton(service, implementation);

@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Ploch.Data.EFCore;
 using Ploch.Data.EFCore.SqLite;
@@ -54,7 +55,10 @@ public class MigrationTests
         }
         finally
         {
-            File.Delete(path);
+            foreach (var file in new[] { path, $"{path}-journal", $"{path}-wal", $"{path}-shm" })
+            {
+                File.Delete(file);
+            }
         }
     }
 
@@ -64,7 +68,11 @@ public class MigrationTests
         var connectionString = Environment.GetEnvironmentVariable(SqlServerConnectionStringVariable);
         Assert.SkipWhen(string.IsNullOrWhiteSpace(connectionString), $"Set {SqlServerConnectionStringVariable} to run the SQL Server tests.");
 
-        await using var dbContext = CreateSqlServerContext(connectionString!);
+        // The test owns a uniquely named database, so it never touches the database named in the variable and
+        // concurrent runs cannot interfere with each other.
+        var isolated = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = $"MigrationTest_{Guid.NewGuid():N}" };
+
+        await using var dbContext = CreateSqlServerContext(isolated.ConnectionString);
         try
         {
             await dbContext.Database.MigrateAsync(TestContext.Current.CancellationToken);
@@ -75,7 +83,9 @@ public class MigrationTests
         }
         finally
         {
-            await dbContext.Database.EnsureDeletedAsync(TestContext.Current.CancellationToken);
+            // Cleanup must run even when the test was cancelled, so it does not use the test's token.
+            using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            await dbContext.Database.EnsureDeletedAsync(cleanup.Token);
         }
     }
 

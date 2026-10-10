@@ -27,6 +27,7 @@
         <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5" />
         <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
         <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.5" />
         <PackageVersion Include="Ploch.Data.EFCore" Version="4.0.1" />
         <PackageVersion Include="Ploch.Data.EFCore.SqLite" Version="4.0.1" />
         <PackageVersion Include="Ploch.Data.EFCore.SqlServer" Version="4.0.1" />

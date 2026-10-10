@@ -4,7 +4,7 @@ using Ploch.TemplateApp.Model;
 
 namespace Ploch.TemplateApp.Data.Configurations;
 
-internal sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
+public sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
 {
     public void Configure(EntityTypeBuilder<Author> builder)
     {

@@ -5,6 +5,7 @@
     <ItemGroup>
         <PackageReference Include="Ploch.Data.EFCore.SqlServer" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
@@ -12,7 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+        <!-- Design-time only: never published with an application that references this project. -->
+        <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
     </ItemGroup>
 
 </Project>

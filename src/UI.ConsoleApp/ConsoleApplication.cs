@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Ploch.Data.EFCore.SqLite;
 using Ploch.Data.GenericRepository.EFCore;
 using Ploch.TemplateApp.Data;
-using Ploch.TemplateApp.Data.SQLite;
 using Ploch.TemplateApp.UI.ConsoleApp.Commands;
 using Ploch.TemplateApp.UI.ConsoleApp.Infrastructure;
 using Spectre.Console.Cli;
@@ -25,18 +24,20 @@ internal static class ConsoleApplication
     /// <param name="services">
     ///     The service collection, which must already contain the <see cref="Spectre.Console.IAnsiConsole" /> to write to.
     /// </param>
-    /// <param name="connectionString">The SQLite connection string of the application database.</param>
+    /// <param name="configureDatabase">
+    ///     Configures the database provider, connection and migrations assembly, for example
+    ///     <c>options =&gt; options.UseSqlite(connectionString, sqlite =&gt; sqlite.MigrationsAssembly(name))</c>.
+    /// </param>
     /// <returns>The configured <see cref="CommandApp" />.</returns>
-    public static CommandApp Create(IServiceCollection services, string connectionString)
+    public static CommandApp Create(IServiceCollection services, Action<DbContextOptionsBuilder> configureDatabase)
     {
         ArgumentNullException.ThrowIfNull(services);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+        ArgumentNullException.ThrowIfNull(configureDatabase);
 
-        // Registers the DbContext with Ploch.Data's generic repositories and unit of work. Migrations live in the
-        // Data.SQLite project, so the migrations assembly is named explicitly.
-        var migrationsAssembly = typeof(TemplateAppDbContextFactory).Assembly.GetName().Name;
-        services.AddDbContextWithRepositories<TemplateAppDbContext, SqLiteDbContextCreationLifecycle>(
-            options => options.UseSqlite(connectionString, sqlite => sqlite.MigrationsAssembly(migrationsAssembly)));
+        // Registers the DbContext with Ploch.Data's generic repositories and unit of work. The SQLite creation
+        // lifecycle adds the value conversions SQLite needs (for example DateTimeOffset); use
+        // DefaultDbContextCreationLifecycle when switching to SQL Server.
+        services.AddDbContextWithRepositories<TemplateAppDbContext, SqLiteDbContextCreationLifecycle>(configureDatabase);
 
         var app = new CommandApp(new TypeRegistrar(services));
         app.Configure(config =>

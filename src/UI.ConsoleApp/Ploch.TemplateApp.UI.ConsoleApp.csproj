@@ -14,17 +14,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- The SQLite project holds the migrations this application applies on start-up. -->
+        <!--
+            The SQLite project holds the migrations this application applies before each command, and the
+            appsettings.json (ConnectionStrings:DefaultConnection) that this application reads.
+        -->
         <ProjectReference Include="..\Data.SQLite\Ploch.TemplateApp.Data.SQLite.csproj" />
         <ProjectReference Include="..\Data\Ploch.TemplateApp.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="Ploch.TemplateApp.UI.ConsoleApp.Tests" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

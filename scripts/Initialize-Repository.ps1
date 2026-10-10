@@ -11,6 +11,8 @@
                              is directly followed by an identifier character, as in "TemplateAppDbContext", the
                              product is used without its dots ("Text.Slugs" -> "TextSlugsDbContext"), so a
                              multi-segment name still produces valid C# identifiers.
+        kebab-case form  ->  the product in kebab case, for command and file names: "template-app" becomes
+                             "text-slugs" for "Ploch.Text.Slugs".
         repositoryToken  ->  -RepositoryName
 
     It also removes the template-only sections of README.md (between "<!-- template-only:start -->" and
@@ -49,7 +51,8 @@
 [CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter(Mandatory)]
-    [ValidatePattern('^Ploch(\.[A-Z][A-Za-z0-9]*)+$')]
+    # Case-sensitive: each segment must start with an upper-case letter, which also rules out C# keywords.
+    [ValidatePattern('^Ploch(\.[A-Z][A-Za-z0-9]*)+$', Options = 'None')]
     [string] $Name,
 
     [ValidatePattern('^[A-Za-z0-9._-]+$')]
@@ -100,17 +103,32 @@ if ($product -ceq $ProductToken) {
 }
 # "Text.Slugs" -> "TextSlugs": used where the token is part of a longer identifier, such as a DbContext class name.
 $productIdentifier = $product.Replace('.', '')
-$identifierTokenPattern = [regex]::Escape($ProductToken) + '(?=[A-Za-z0-9_])'
+# "TemplateApp" -> "template-app", "Text.Slugs" -> "text-slugs": the forms used for command names and file names.
+function ConvertTo-KebabCase([string] $Value) {
+    return ($Value -creplace '(?<=[a-z0-9])(?=[A-Z])', '-').Replace('.', '-').ToLowerInvariant()
+}
+$kebabToken = ConvertTo-KebabCase $ProductToken
+$productKebab = ConvertTo-KebabCase $product
 
-function Convert-ProductToken([string] $Text) {
-    $withIdentifiers = [regex]::Replace($Text, $identifierTokenPattern, $productIdentifier)
-    return $withIdentifiers.Replace($ProductToken, $product)
+$tokenPattern = '(?<repository>' + [regex]::Escape($RepositoryToken) + ')|(?<kebab>' + [regex]::Escape($kebabToken) + ')|(?<product>' +
+    [regex]::Escape($ProductToken) + ')(?<identifier>(?=[A-Za-z0-9_]))?'
+
+# Replaces both placeholders in a single pass, so a new name that itself contains a placeholder (for example
+# "Ploch.TemplateApp.Tools") is never processed a second time.
+function Convert-TemplateToken([string] $Text) {
+    return [regex]::Replace($Text, $tokenPattern, {
+            param($match)
+            if ($match.Groups['repository'].Success) { return $RepositoryName }
+            if ($match.Groups['kebab'].Success) { return $productKebab }
+            if ($match.Groups['identifier'].Success) { return $productIdentifier }
+            return $product
+        })
 }
 
 $trackedFiles = @(git ls-files) | Where-Object { $_ -notin $templateOnlyFiles }
 $filesWithTokens = @($trackedFiles | Where-Object {
         $content = Get-Content -LiteralPath $_ -Raw -ErrorAction SilentlyContinue
-        $_ -cmatch $ProductToken -or ($content -and ($content.Contains($ProductToken) -or $content.Contains($RepositoryToken)))
+        $_ -cmatch $ProductToken -or ($content -and ($content.Contains($ProductToken) -or $content.Contains($RepositoryToken) -or $content.Contains($kebabToken)))
     })
 
 if ($filesWithTokens.Count -eq 0) {
@@ -192,7 +210,7 @@ foreach ($file in $trackedFiles) {
     if ($file -eq 'README.md') {
         $updated = [regex]::Replace($updated, $TemplateOnlyPattern, [string]::Empty)
     }
-    $updated = Convert-ProductToken $updated.Replace($RepositoryToken, $RepositoryName)
+    $updated = Convert-TemplateToken $updated
     if ($file -like '*.cs' -and $updated -cne $original) {
         $updated = Format-UsingDirective $updated
     }
@@ -218,7 +236,7 @@ $pathsToRename = $trackedFiles |
 
 foreach ($path in $pathsToRename) {
     $leaf = Split-Path $path -Leaf
-    $newLeaf = Convert-ProductToken $leaf
+    $newLeaf = Convert-TemplateToken $leaf
     $parent = Split-Path $path -Parent
     $newPath = if ($parent) { "$parent/$newLeaf" } else { $newLeaf }
     if ($PSCmdlet.ShouldProcess($path, "Rename to $newLeaf")) {

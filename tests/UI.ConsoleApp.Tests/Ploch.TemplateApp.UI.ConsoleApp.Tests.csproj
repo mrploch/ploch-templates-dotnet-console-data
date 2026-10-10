@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\src\Data.SQLite\Ploch.TemplateApp.Data.SQLite.csproj" />
         <ProjectReference Include="..\..\src\UI.ConsoleApp\Ploch.TemplateApp.UI.ConsoleApp.csproj" />
     </ItemGroup>
 

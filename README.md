@@ -63,8 +63,18 @@ dotnet run --project src/UI.ConsoleApp -- articles list
 ```
 
 The application stores its data in the SQLite database named by `ConnectionStrings:DefaultConnection` in
-`src/UI.ConsoleApp/appsettings.json` (`template-app.db` next to the executable) and applies any pending migrations
-before each command.
+`src/Data.SQLite/appsettings.json`. That one file serves both the EF Core tools and the application: it is copied
+next to the executable, and a relative path such as `template-app.db` resolves against the executable's folder, not
+the current directory.
+
+Every command brings the schema up to date (`Database.MigrateAsync`) before it runs. On SQLite that check costs a
+few milliseconds and keeps a fresh checkout working with no setup; an application that must not change its schema
+implicitly can move the call into a dedicated `database update` command.
+
+`ConsoleApplication.Create` takes the database configuration from its caller, so `Program.cs` is the one place that
+chooses the provider. To switch to SQL Server, reference `src/Data.SqlServer` from the application, call
+`UseSqlServer` with that project's migrations assembly in `Program.cs`, and register
+`DefaultDbContextCreationLifecycle` instead of `SqLiteDbContextCreationLifecycle` in `ConsoleApplication`.
 
 ## Project layout
 
@@ -72,7 +82,7 @@ before each command.
 |---|---|
 | `src/Model` | Entities (POCOs implementing Ploch.Data.Model interfaces); no EF Core dependency |
 | `src/Data` | `TemplateAppDbContext` and the `IEntityTypeConfiguration<>` classes |
-| `src/Data.SQLite` | SQLite migrations and the design-time factory used by `dotnet ef` |
+| `src/Data.SQLite` | SQLite migrations, the design-time factory used by `dotnet ef`, and the connection string |
 | `src/Data.SqlServer` | SQL Server migrations and design-time factory |
 | `src/UI.ConsoleApp` | The executable: `ConsoleApplication` (services, data layer, commands) and `Commands/` |
 | `tests/Data.IntegrationTests` | Repository and unit-of-work tests, and migration checks for both providers |
