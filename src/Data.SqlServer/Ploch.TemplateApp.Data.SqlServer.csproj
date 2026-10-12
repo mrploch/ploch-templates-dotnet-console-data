@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- Holds the SqlServer migrations and the design-time factory used by the dotnet-ef tool. -->
+
+    <ItemGroup>
+        <PackageReference Include="Ploch.Data.EFCore.SqlServer" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Data\Ploch.TemplateApp.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--
+            Used by the dotnet-ef tool and, once an application references this project instead of src/Data.SQLite,
+            as that application's configuration: it is copied to the output and publish folders like the SQLite one.
+        -->
+        <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>

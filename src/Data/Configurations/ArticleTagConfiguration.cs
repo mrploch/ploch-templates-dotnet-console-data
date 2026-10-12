@@ -1,0 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Ploch.TemplateApp.Model;
+
+namespace Ploch.TemplateApp.Data.Configurations;
+
+/// <summary>
+/// <see cref="ArticleTag"/> entity configuration.
+/// The Article-ArticleTag many-to-many relationship is configured from the Article side in
+/// <see cref="ArticleConfiguration"/>; the remaining constraints come from the base
+/// <c>Tag</c> type and data annotations.
+/// </summary>
+public sealed class ArticleTagConfiguration : IEntityTypeConfiguration<ArticleTag>
+{
+    public void Configure(EntityTypeBuilder<ArticleTag> builder)
+    {
+        // Intentionally empty — see the type summary.
+    }
+}

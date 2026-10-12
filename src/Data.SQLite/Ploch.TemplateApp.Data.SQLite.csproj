@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        Holds the SQLite migrations and the design-time factory used by the dotnet-ef tool. Its appsettings.json is
+        also the application's configuration: it flows into UI.ConsoleApp's output, so there is exactly one
+        connection string, used by both the EF tools and the running application.
+    -->
+
+    <ItemGroup>
+        <PackageReference Include="Ploch.Data.EFCore.SqLite" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Data\Ploch.TemplateApp.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="Ploch.Data.EFCore" />
+        <PackageReference Include="Ploch.Data.GenericRepository.EFCore" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Model\Ploch.TemplateApp.Model.csproj" />
+    </ItemGroup>
+
+</Project>

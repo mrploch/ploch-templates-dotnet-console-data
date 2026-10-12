@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Central package management: every package version used in the repository is pinned here.
+    Versions are aligned with mrploch-development/dependencies/*.Packages.props; Dependabot keeps them current.
+-->
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    </PropertyGroup>
+
+    <ItemGroup Label="Build">
+        <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.94" />
+    </ItemGroup>
+
+    <ItemGroup Label="Application">
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
+        <PackageVersion Include="Ploch.Common" Version="4.0.47" />
+        <PackageVersion Include="Spectre.Console" Version="0.54.0" />
+        <PackageVersion Include="Spectre.Console.Cli" Version="0.53.1" />
+    </ItemGroup>
+
+    <ItemGroup Label="Data">
+        <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.5" />
+        <PackageVersion Include="Ploch.Data.EFCore" Version="4.0.1" />
+        <PackageVersion Include="Ploch.Data.EFCore.SqLite" Version="4.0.1" />
+        <PackageVersion Include="Ploch.Data.EFCore.SqlServer" Version="4.0.1" />
+        <PackageVersion Include="Ploch.Data.GenericRepository.EFCore" Version="4.0.1" />
+        <PackageVersion Include="Ploch.Data.Model" Version="4.0.1" />
+    </ItemGroup>
+
+    <ItemGroup Label="Testing">
+        <PackageVersion Include="AutoFixture.Xunit3" Version="4.19.0" />
+        <PackageVersion Include="coverlet.msbuild" Version="10.0.1" />
+        <PackageVersion Include="FluentAssertions" Version="8.10.0" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
+        <PackageVersion Include="Ploch.Data.GenericRepository.EFCore.IntegrationTesting" Version="4.0.1" />
+        <PackageVersion Include="Spectre.Console.Testing" Version="0.54.0" />
+        <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+        <PackageVersion Include="xunit.v3" Version="3.2.2" />
+    </ItemGroup>
+
+    <ItemGroup Label="Analysers">
+        <GlobalPackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.201" />
+        <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15" />
+        <GlobalPackageReference Include="Roslynator.Analyzers" Version="4.15.0" />
+        <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.21.0.135717" />
+        <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
+    </ItemGroup>
+</Project>
