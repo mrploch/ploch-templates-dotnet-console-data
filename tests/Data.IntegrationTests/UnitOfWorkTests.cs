@@ -30,7 +30,7 @@ public class UnitOfWorkTests : GenericRepositoryDataIntegrationTest<TemplateAppD
 
         savedAuthor.Should().NotBeNull();
         savedArticle.Should().NotBeNull();
-        savedArticle!.AuthorId.Should().Be(savedAuthor!.Id);
+        savedArticle.AuthorId.Should().Be(savedAuthor.Id);
     }
 
     [Fact]
@@ -59,12 +59,12 @@ public class UnitOfWorkTests : GenericRepositoryDataIntegrationTest<TemplateAppD
         var saved = await verifyContext.Articles.FindAsync([article.Id], TestContext.Current.CancellationToken);
 
         saved.Should().NotBeNull();
-        saved!.Title.Should().Be("Updated Title");
+        saved.Title.Should().Be("Updated Title");
 
         // The update must advance ModifiedTime past its insert value (the delay above is far larger than SQLite's
         // ~100µs timestamp precision) and must leave CreatedTime alone.
-        saved.ModifiedTime.Should().BeAfter(modifiedAfterInsert!.Value);
-        saved.CreatedTime.Should().BeCloseTo(createdTime!.Value, TimeSpan.FromMilliseconds(1));
+        saved.ModifiedTime.Should().BeAfter(modifiedAfterInsert.Value);
+        saved.CreatedTime.Should().BeCloseTo(createdTime.Value, TimeSpan.FromMilliseconds(1));
     }
 
     [Fact]

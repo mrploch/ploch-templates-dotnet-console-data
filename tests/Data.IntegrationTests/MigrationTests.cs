@@ -45,7 +45,7 @@ public class MigrationTests
             await using (var dbContext = CreateSqLiteContext($"DataSource={path};Pooling=False"))
             {
                 await dbContext.Database.MigrateAsync(TestContext.Current.CancellationToken);
-                dbContext.Articles.Add(new Article { Title = "Migrated", Author = new Author { Name = "Ada" } });
+                await dbContext.Articles.AddAsync(new Article { Title = "Migrated", Author = new Author { Name = "Ada" } }, TestContext.Current.CancellationToken);
                 await dbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
             }
 
@@ -76,7 +76,7 @@ public class MigrationTests
         try
         {
             await dbContext.Database.MigrateAsync(TestContext.Current.CancellationToken);
-            dbContext.Articles.Add(new Article { Title = "Migrated" });
+            await dbContext.Articles.AddAsync(new Article { Title = "Migrated" }, TestContext.Current.CancellationToken);
             await dbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
             (await dbContext.Articles.CountAsync(TestContext.Current.CancellationToken)).Should().Be(1);
