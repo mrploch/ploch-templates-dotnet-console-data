@@ -28,7 +28,7 @@ public class ArticleRepositoryTests : GenericRepositoryDataIntegrationTest<Templ
         var saved = await verifyContext.Articles.FindAsync([article.Id], TestContext.Current.CancellationToken);
 
         saved.Should().NotBeNull();
-        saved!.Title.Should().Be("Test Article");
+        saved.Title.Should().Be("Test Article");
         saved.CreatedTime.Should().NotBeNull();
         saved.ModifiedTime.Should().NotBeNull();
     }
@@ -63,8 +63,8 @@ public class ArticleRepositoryTests : GenericRepositoryDataIntegrationTest<Templ
                                        .FirstOrDefaultAsync(a => a.Id == article.Id, TestContext.Current.CancellationToken);
 
         saved.Should().NotBeNull();
-        saved!.Categories.Should().HaveCount(1);
-        saved.Categories!.First().Name.Should().Be("Test Category");
+        saved.Categories.Should().HaveCount(1);
+        saved.Categories.First().Name.Should().Be("Test Category");
         saved.Tags.Should().HaveCount(1);
         saved.Tags.First().Name.Should().Be("Test Tag");
     }
@@ -96,10 +96,10 @@ public class ArticleRepositoryTests : GenericRepositoryDataIntegrationTest<Templ
                                              .FirstOrDefaultAsync(c => c.Id == parent.Id, TestContext.Current.CancellationToken);
 
         savedParent.Should().NotBeNull();
-        savedParent!.Children.Should().HaveCount(1);
-        savedParent.Children!.First().Name.Should().Be("Child");
-        savedParent.Children!.First().Children.Should().HaveCount(1);
-        savedParent.Children!.First().Children!.First().Name.Should().Be("Grandchild");
+        savedParent.Children.Should().HaveCount(1);
+        savedParent.Children.First().Name.Should().Be("Child");
+        savedParent.Children.First().Children.Should().HaveCount(1);
+        savedParent.Children.First().Children!.First().Name.Should().Be("Grandchild");
     }
 
     [Fact]
@@ -126,7 +126,7 @@ public class ArticleRepositoryTests : GenericRepositoryDataIntegrationTest<Templ
                                        .FirstOrDefaultAsync(a => a.Id == article.Id, TestContext.Current.CancellationToken);
 
         saved.Should().NotBeNull();
-        saved!.Properties.Should().HaveCount(2);
+        saved.Properties.Should().HaveCount(2);
         saved.Properties.Should().Contain(p => p.Name == "ReadingTime" && p.Value == "5 minutes");
         saved.Properties.Should().Contain(p => p.Name == "Difficulty" && p.Value == "Easy");
     }
