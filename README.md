@@ -143,8 +143,9 @@ These steps need repository or organisation administrator access and cannot be a
    Actions**. The organisation defaults to the repository owner; set the `SONAR_ORGANIZATION` variable to override it.
 
 Until `SONAR_TOKEN` exists and the SonarCloud project has been created, the Build workflow skips SonarCloud with
-a warning rather than failing, so a new repository is green from its first push. A token that exists but is
-rejected by SonarCloud fails the build.
+a warning rather than failing, so a new repository is green from its first push. A token that SonarCloud rejects
+(HTTP 401 or 403) also skips SonarCloud with a warning, so the build and tests still run; rotate the token to restore
+analysis. Any other unexpected SonarCloud response fails the build.
 
 ### Security reporting
 
