@@ -43,7 +43,10 @@
         <PackageVersion Include="Ploch.Data.GenericRepository.EFCore.IntegrationTesting" Version="4.0.1" />
         <PackageVersion Include="Spectre.Console.Testing" Version="0.54.0" />
         <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.1" />
-        <PackageVersion Include="xunit.v3" Version="4.0.2" />
+        <!-- xunit.v3 4.x runs on Microsoft.Testing.Platform v2, which refuses the VSTest mode of dotnet test on the
+             .NET 10 SDK. The mtp-off package keeps the VSTest runner that coverlet.msbuild, the TRX logger and the
+             CI coverage steps rely on. -->
+        <PackageVersion Include="xunit.v3.mtp-off" Version="4.0.2" />
     </ItemGroup>
 
     <ItemGroup Label="Analysers">
