@@ -47,10 +47,10 @@
     </ItemGroup>
 
     <ItemGroup Label="Analysers">
-        <GlobalPackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.201" />
-        <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15" />
-        <GlobalPackageReference Include="Roslynator.Analyzers" Version="4.15.0" />
-        <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.21.0.135717" />
+        <GlobalPackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.401" />
+        <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.12.1" />
+        <GlobalPackageReference Include="Roslynator.Analyzers" Version="5.0.1" />
+        <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.35.0.4138" />
         <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
     </ItemGroup>
 </Project>
