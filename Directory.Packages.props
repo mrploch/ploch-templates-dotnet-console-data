@@ -17,8 +17,8 @@
     <ItemGroup Label="Application">
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
         <PackageVersion Include="Ploch.Common" Version="4.0.47" />
-        <PackageVersion Include="Spectre.Console" Version="0.54.0" />
-        <PackageVersion Include="Spectre.Console.Cli" Version="0.53.1" />
+        <PackageVersion Include="Spectre.Console" Version="0.57.2" />
+        <PackageVersion Include="Spectre.Console.Cli" Version="0.57.2" />
     </ItemGroup>
 
     <ItemGroup Label="Data">
@@ -41,7 +41,7 @@
         <PackageVersion Include="FluentAssertions" Version="8.11.0" />
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
         <PackageVersion Include="Ploch.Data.GenericRepository.EFCore.IntegrationTesting" Version="4.0.1" />
-        <PackageVersion Include="Spectre.Console.Testing" Version="0.54.0" />
+        <PackageVersion Include="Spectre.Console.Testing" Version="0.57.2" />
         <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.1" />
         <!-- xunit.v3 4.x runs on Microsoft.Testing.Platform v2, which refuses the VSTest mode of dotnet test on the
              .NET 10 SDK. The mtp-off package keeps the VSTest runner that coverlet.msbuild, the TRX logger and the
