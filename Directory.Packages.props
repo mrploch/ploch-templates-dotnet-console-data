@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup Label="Application">
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
         <PackageVersion Include="Ploch.Common" Version="4.0.47" />
         <PackageVersion Include="Spectre.Console" Version="0.57.2" />
         <PackageVersion Include="Spectre.Console.Cli" Version="0.57.2" />
