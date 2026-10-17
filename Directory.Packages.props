@@ -50,7 +50,7 @@
     </ItemGroup>
 
     <ItemGroup Label="Analysers">
-        <GlobalPackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.401" />
+        <GlobalPackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.402" />
         <GlobalPackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.12.1" />
         <GlobalPackageReference Include="Roslynator.Analyzers" Version="5.0.1" />
         <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.35.0.4138" />
