@@ -1,0 +1,7 @@
+---
+engines:
+  markdownlint:
+    exclude_paths:
+      # Change-log entries are fragments that start at a "### Added/Changed/..." heading (see change-log/README.md),
+      # so they cannot satisfy MD041 (first line must be a top-level heading).
+      - "change-log/**"

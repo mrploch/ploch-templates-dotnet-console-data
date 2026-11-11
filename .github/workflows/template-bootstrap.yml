@@ -74,4 +74,4 @@ jobs:
           done
           test -n "$solution"
           dotnet build "$solution" --configuration Release
-          dotnet test "$solution" --no-build --configuration Release
+          dotnet test --solution "$solution" --no-build --configuration Release

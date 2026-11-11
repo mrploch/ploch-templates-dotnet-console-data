@@ -48,11 +48,19 @@
     </ItemGroup>
 
     <!--
-        Coverage is collected by coverlet.msbuild in every test project, so `dotnet test /p:CollectCoverage=true`
-        always produces a report. A test project without it would silently report nothing.
+        Tests run on Microsoft.Testing.Platform (global.json). Coverage is collected by coverlet.MTP in every test
+        project, so `dotnet test` with the coverlet option always produces a report. A test project without it would
+        silently report nothing.
     -->
+    <PropertyGroup Condition="$(IsTestProject)">
+        <!-- Coverage files are otherwise named only by a timestamp, and the projects of a solution run in parallel into
+             one results directory; the project name keeps every report. -->
+        <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --coverlet-file-prefix $(MSBuildProjectName)</TestingPlatformCommandLineArguments>
+    </PropertyGroup>
+
     <ItemGroup Condition="$(IsTestProject)">
-        <PackageReference Include="coverlet.msbuild" PrivateAssets="all" />
+        <PackageReference Include="coverlet.MTP" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
