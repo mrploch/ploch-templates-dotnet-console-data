@@ -168,7 +168,7 @@ jobs:
         run: |
           # Microsoft.Testing.Platform mode (global.json): TRX and coverlet.MTP coverage land in TestResults/.
           exclude_args=()
-          IFS=',' read -ra patterns <<< \"$COVERAGE_EXCLUDE\"
+          IFS=',' read -ra patterns <<< "$COVERAGE_EXCLUDE"
           for pattern in "${patterns[@]}"; do exclude_args+=(--coverlet-exclude-by-file "$pattern"); done
           dotnet test --solution "$SOLUTION" --no-build --configuration Release \
             --results-directory TestResults \

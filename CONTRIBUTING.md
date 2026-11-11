@@ -20,6 +20,7 @@ dotnet test -c Release
 Coverage, as CI measures it:
 
 ```bash
+rm -rf TestResults coverage-report   # reports from earlier runs would be merged in
 dotnet test -c Release --results-directory TestResults --coverlet --coverlet-output-format cobertura
 dotnet reportgenerator "-reports:TestResults/*coverage.cobertura.*.xml" -targetdir:coverage-report -reporttypes:Html
 ```
