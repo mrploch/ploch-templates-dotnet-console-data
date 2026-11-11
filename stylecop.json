@@ -4,6 +4,9 @@
     "layoutRules": {
       "newlineAtEndOfFile": "require"
     },
+    "maintainabilityRules": {
+      "topLevelTypes": [ "class", "interface", "struct", "enum", "delegate" ]
+    },
     "readabilityRules": {
       "allowBuiltInTypeAliases": true
     }
