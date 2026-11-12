@@ -20,8 +20,9 @@ dotnet test -c Release
 Coverage, as CI measures it:
 
 ```bash
-dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=./CoverageResults/ "/p:CoverletOutputFormat=cobertura%2copencover"
-dotnet reportgenerator "-reports:**/CoverageResults/coverage*.cobertura.xml" -targetdir:coverage-report -reporttypes:Html
+rm -rf TestResults coverage-report   # reports from earlier runs would be merged in
+dotnet test -c Release --results-directory TestResults --coverlet --coverlet-output-format cobertura
+dotnet reportgenerator "-reports:TestResults/*coverage.cobertura.*.xml" -targetdir:coverage-report -reporttypes:Html
 ```
 
 ## Pull requests

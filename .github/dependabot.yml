@@ -26,7 +26,7 @@ updates:
           - "AutoFixture*"
           - "coverlet.*"
           - "FluentAssertions*"
-          - "Microsoft.NET.Test.Sdk"
+          - "Microsoft.Testing.*"
           - "xunit*"
 
   - package-ecosystem: "dotnet-sdk"

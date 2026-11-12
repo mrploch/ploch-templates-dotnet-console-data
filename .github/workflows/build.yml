@@ -153,8 +153,8 @@ jobs:
           /v:"$VERSION"
           /d:sonar.token="$SONAR_TOKEN"
           /d:sonar.host.url="https://sonarcloud.io"
-          /d:sonar.cs.opencover.reportsPaths="**/CoverageResults/coverage*.opencover.xml"
-          /d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+          /d:sonar.cs.opencover.reportsPaths="TestResults/*coverage.opencover.*.xml"
+          /d:sonar.cs.vstest.reportsPaths="TestResults/*.trx"
           /d:sonar.coverage.exclusions="$COVERAGE_EXCLUDE"
           /d:sonar.qualitygate.wait=true
 
@@ -166,20 +166,29 @@ jobs:
       - name: Test
         id: test
         run: |
-          dotnet test "$SOLUTION" --no-build --configuration Release \
-            --logger "trx;LogFilePrefix=TestResults" \
-            /p:CollectCoverage=true \
-            /p:CoverletOutput=./CoverageResults/ \
-            "/p:CoverletOutputFormat=cobertura%2copencover" \
-            "/p:ExcludeByFile=\"${COVERAGE_EXCLUDE//,/%2c}\""
+          # Microsoft.Testing.Platform mode (global.json): TRX and coverlet.MTP coverage land in TestResults/.
+          exclude_args=()
+          IFS=',' read -ra patterns <<< "$COVERAGE_EXCLUDE"
+          for pattern in "${patterns[@]}"; do exclude_args+=(--coverlet-exclude-by-file "$pattern"); done
+          dotnet test --solution "$SOLUTION" --no-build --configuration Release \
+            --results-directory TestResults \
+            --report-trx \
+            --coverlet \
+            --coverlet-output-format cobertura \
+            --coverlet-output-format opencover \
+            "${exclude_args[@]}"
 
       # Tests that pass without producing coverage would otherwise skip every coverage step and leave the build
       # green with nothing measured (for example, a test project missing from the solution).
       - name: Check that coverage was collected
         if: steps.test.outcome == 'success'
+        # Every test project must write both formats: Cobertura feeds the reports, OpenCover feeds SonarCloud.
         run: |
-          if [ -z "$(find . -path '*/CoverageResults/coverage*.cobertura.xml' -print -quit)" ]; then
-            echo "::error title=No coverage collected::The tests passed but produced no coverage report. Check that every test project is in $SOLUTION and references coverlet.msbuild (Directory.Build.props adds it to projects whose names end in Tests)."
+          expected=$(find tests -name '*Tests.csproj' | wc -l)
+          cobertura=$(find TestResults -maxdepth 1 -name '*coverage.cobertura.*.xml' 2>/dev/null | wc -l)
+          opencover=$(find TestResults -maxdepth 1 -name '*coverage.opencover.*.xml' 2>/dev/null | wc -l)
+          if [ "$expected" -eq 0 ] || [ "$cobertura" -ne "$expected" ] || [ "$opencover" -ne "$expected" ]; then
+            echo "::error title=Incomplete coverage::Expected one Cobertura and one OpenCover report for each of the $expected test projects; found $cobertura and $opencover. Check that every test project is in $SOLUTION and references coverlet.MTP (Directory.Build.props adds it to projects whose names end in Tests)."
             exit 1
           fi
 
@@ -193,10 +202,10 @@ jobs:
 
       - name: Generate coverage report
         id: coverage
-        if: ${{ !cancelled() && hashFiles('**/CoverageResults/coverage*.cobertura.xml') != '' }}
+        if: ${{ !cancelled() && hashFiles('TestResults/*coverage.cobertura.*.xml') != '' }}
         run: |
           dotnet reportgenerator \
-            "-reports:**/CoverageResults/coverage*.cobertura.xml" \
+            "-reports:TestResults/*coverage.cobertura.*.xml" \
             "-targetdir:coverage-report" \
             "-reporttypes:Cobertura;MarkdownSummaryGithub;Html" \
             "-verbosity:Warning"
@@ -257,7 +266,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: test-results
-          path: "**/TestResults/*.trx"
+          path: "TestResults/*.trx"
           if-no-files-found: warn
           overwrite: true
 
@@ -269,7 +278,7 @@ jobs:
           overwrite: true
           path: |
             coverage-report/
-            **/CoverageResults/*.xml
+            TestResults/*coverage.*.xml
 
       # Last, so the report and comment exist even when the threshold fails the job.
       - name: Enforce coverage of changed lines

@@ -16,7 +16,7 @@ Instructions for AI coding agents working in this repository. Human contributors
 ```bash
 dotnet tool restore
 dotnet build Ploch.TemplateApp.slnx -c Release
-dotnet test Ploch.TemplateApp.slnx -c Release
+dotnet test --solution Ploch.TemplateApp.slnx -c Release
 dotnet run --project src/UI.ConsoleApp -- articles list
 ```
 
