@@ -42,7 +42,7 @@
         <PackageVersion Include="AutoFixture.Xunit3" Version="4.19.0" />
         <!-- xUnit 4 runs on Microsoft.Testing.Platform (MTP) v2, which refuses the VSTest mode of dotnet test on the
              .NET 10 SDK; global.json selects the MTP mode. Coverage (coverlet.MTP) and TRX are MTP extensions. -->
-        <PackageVersion Include="coverlet.MTP" Version="10.1.0" />
+        <PackageVersion Include="coverlet.MTP" Version="10.1.1" />
         <PackageVersion Include="FluentAssertions" Version="8.11.0" />
         <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.5.3" />
         <PackageVersion Include="Ploch.Data.GenericRepository.EFCore.IntegrationTesting" Version="4.0.1" />
