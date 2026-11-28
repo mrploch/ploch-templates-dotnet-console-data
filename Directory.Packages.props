@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup Label="Application">
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
         <PackageVersion Include="Ploch.Common" Version="4.0.47" />
         <PackageVersion Include="Spectre.Console" Version="0.57.2" />
         <PackageVersion Include="Spectre.Console.Cli" Version="0.57.2" />
@@ -42,7 +42,7 @@
         <PackageVersion Include="AutoFixture.Xunit3" Version="4.19.0" />
         <!-- xUnit 4 runs on Microsoft.Testing.Platform (MTP) v2, which refuses the VSTest mode of dotnet test on the
              .NET 10 SDK; global.json selects the MTP mode. Coverage (coverlet.MTP) and TRX are MTP extensions. -->
-        <PackageVersion Include="coverlet.MTP" Version="10.1.0" />
+        <PackageVersion Include="coverlet.MTP" Version="10.1.1" />
         <PackageVersion Include="FluentAssertions" Version="8.11.0" />
         <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.5.3" />
         <PackageVersion Include="Ploch.Data.GenericRepository.EFCore.IntegrationTesting" Version="4.0.1" />
